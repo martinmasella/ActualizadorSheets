@@ -207,6 +207,9 @@ namespace ActualizadorSheets
             decimal PAL30D = Precio("AL30D48", "Precio");
             decimal PAL30D48V = Precio("AL30D48", "Venta");
             decimal PAL30D48C = Precio("AL30D48", "Compra");
+            decimal PGD30DV48 = Precio("GD30D48", "Venta");
+            decimal PGD30DC48 = Precio("GD30D48", "Compra");
+
 
             decimal PuntasGDAL = 0;
             decimal PuntasALGD = 0;
@@ -221,15 +224,10 @@ namespace ActualizadorSheets
                 ValueRange valueRange = new ValueRange();
                 valueRange.MajorDimension = "COLUMNS";//"ROWS";//COLUMNS
 
-                /*
-                var oblist = new List<object>() { PBono1, PBono2, ratio,
-                    PGD30V, PGD30DC, PAL30DV, PAL30C, PAL30V, PAL30DC, PGD30DV, PGD30C,
-                    PGD30V48, PGD30C48, PAL30V48, PAL30C48, ledeV,ledeC, ledeDV,ledeDC,GD30D,AL30D};
-                */
                 var oblist = new List<object>() { PGD3048, PAL3048, ratio,
                     PGD30V, PGD30DC, PAL30DV, PAL30C, PAL30V, PAL30DC, PGD30DV, PGD30C,
                     PGD30V48, PGD30C48, PAL30V48, PAL30C48, PLEDEV, PLEDEC, PLEDEDV,
-                    PLEDEDC, PGD30D, PAL30D,PAL30D48V,PAL30D48C};
+                    PLEDEDC, PGD30D, PAL30D,PAL30D48V,PAL30D48C, PGD30DV48, PGD30DC48};
 
                 valueRange.Values = new List<IList<object>> { oblist };
 
