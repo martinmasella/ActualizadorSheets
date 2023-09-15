@@ -25,10 +25,12 @@ namespace ActualizadorSheets
         List<string> nombres;
         List<Ticker> tickers;
 
+        //Acá hardcodee el ID de mi Google Sheet.
         String spreadsheetId2 = "1W2kTK4n10-fKWYRJmoffOnxdaibkL-7I5wduSHVlGvI";
 
         UserCredential credencial;
         SheetsService service;
+        //Idem con el archivo jSon del Secret.
         FileStream stream = new FileStream("client_secret_202947654746-fmqgbul2aegj1gqe66cjh5tb633oadcn.apps.googleusercontent.com.json", FileMode.Open, FileAccess.Read);
         string credPath = "token.json";
         static string[] Scopes = { "https://www.googleapis.com/auth/spreadsheets" };
@@ -59,7 +61,6 @@ namespace ActualizadorSheets
             LEDEDolares = configuracion.GetSection("MiConfiguracion:LEDE Dolares").Value;
             txtUsuario.Text = configuracion.GetSection("MiConfiguracion:UsuarioVETA").Value;
             txtClave.Text = configuracion.GetSection("MiConfiguracion:ClaveVETA").Value;
-
         }
 
         private void btnClear_Click(object sender, EventArgs e)
@@ -114,8 +115,9 @@ namespace ActualizadorSheets
         {
             try
             {
-                var ticker = marketData.Instrument.Symbol;
-                //var ticker = marketData.InstrumentId.Symbol;
+                //En la versión Alpha era así. Gracias Juan Manuel Álvarez.
+                //var ticker = marketData.Instrument.Symbol;
+                var ticker = marketData.InstrumentId.Symbol;
                 decimal bid = 0;
                 if (marketData.Data.Bids != null)
                 {
