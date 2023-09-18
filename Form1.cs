@@ -165,7 +165,8 @@ namespace ActualizadorSheets
 
         private void ToLog(string s)
         {
-            lstLog.Items.Add(DateTime.Now.ToLongTimeString() + ": " + s);
+            string texto = $"{DateTime.Now.ToLongTimeString()}: {s}";
+            lstLog.Items.Add(texto);
             lstLog.SelectedIndex = lstLog.Items.Count - 1;
         }
 
