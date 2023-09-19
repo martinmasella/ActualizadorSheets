@@ -267,28 +267,28 @@ namespace ActualizadorSheets
                 }
 
             }
-
         }
 
-        private decimal Precio(string nombremedio, string cual)
+
+        private decimal Precio(string nombreMedio, string cual)
         {
-            decimal precio = 0;
-            var ticker = tickers.Where<Ticker>(t => t.NombreMedio == nombremedio).FirstOrDefault();
+            var ticker = tickers.FirstOrDefault(t => t.NombreMedio == nombreMedio);
+            if (ticker == null)
+            {
+                throw new ArgumentException("No se encontró el ticker con el nombre especificado.");
+            }
             switch (cual)
             {
                 case "Precio":
-                    precio = ticker.last;
-                    break;
+                    return ticker.last;
                 case "Venta":
-                    precio = ticker.offer;
-                    break;
+                    return ticker.offer;
                 case "Compra":
-                    precio = ticker.bid;
-                    break;
+                    return ticker.bid;
+                default:
+                    throw new ArgumentException("El valor " + cual + " no es válido.");
             }
-            return precio;
         }
-
 
 
     }
