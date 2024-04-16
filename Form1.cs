@@ -155,6 +155,7 @@ namespace ActualizadorSheets
             nombres.Add("AL30D");
             nombres.Add(LEDEPesos);
             nombres.Add(LEDEDolares);
+            nombres.Add("CLSIO");
 
             foreach (var nombre in nombres)
             {
@@ -216,6 +217,8 @@ namespace ActualizadorSheets
             decimal PLEDEC48 = Precio(LEDEPesos + "48", "Compra");
             decimal PLEDEDV48 = Precio(LEDEDolares + "48", "Venta");
             decimal PLEDEDC48 = Precio(LEDEDolares + "48", "Compra");
+            decimal PCLSIOC = Precio("CLSIOCI", "Compra");
+            decimal PCLSIOV48 = Precio("CLSIO48", "Venta");
 
 
             decimal PuntasGDAL = 0;
@@ -235,7 +238,7 @@ namespace ActualizadorSheets
                     PGD30V, PGD30DC, PAL30DV, PAL30C, PAL30V, PAL30DC, PGD30DV, PGD30C,
                     PGD30V48, PGD30C48, PAL30V48, PAL30C48, PLEDEV, PLEDEC, PLEDEDV,
                     PLEDEDC, PGD30D, PAL30D,PAL30D48V,PAL30D48C, PGD30DV48, PGD30DC48,
-                    PLEDEV48, PLEDEC48, PLEDEDV48, PLEDEDC48};
+                    PLEDEV48, PLEDEC48, PLEDEDV48, PLEDEDC48, PCLSIOC, PCLSIOV48};
 
                 valueRange.Values = new List<IList<object>> { oblist };
 
