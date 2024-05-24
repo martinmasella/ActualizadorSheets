@@ -16,7 +16,8 @@ namespace ActualizadorSheets
         const string sURL = "https://api.veta.xoms.com.ar";
         const string prefijoPrimary = "MERV - XMEV - ";
         const string sufijoCI = " - CI";
-        const string sufijo48 = " - 48hs";
+        //const string sufijo48 = " - 48hs";
+        const string sufijo24 = " - 24hs";
 
         string LEDEPesos;
         string LEDEDolares;
@@ -160,7 +161,7 @@ namespace ActualizadorSheets
             foreach (var nombre in nombres)
             {
                 tickers.Add(new Ticker(prefijoPrimary + nombre + sufijoCI, nombre + "CI", nombre));
-                tickers.Add(new Ticker(prefijoPrimary + nombre + sufijo48, nombre + "48", nombre));
+                tickers.Add(new Ticker(prefijoPrimary + nombre + sufijo24, nombre + "24", nombre));
             }
         }
 
@@ -184,12 +185,12 @@ namespace ActualizadorSheets
             ToLog("Tick");
             string ahora = DateTime.Now.ToString("HH:mm:ss");
 
-            decimal PGD3048 = Precio("GD3048", "Precio");
-            decimal PAL3048 = Precio("AL3048", "Precio");
+            decimal PGD3024 = Precio("GD3024", "Precio");
+            decimal PAL3024 = Precio("AL3024", "Precio");
             decimal ratio = 0;
-            if (PGD3048 > 0 && PAL3048 > 0)
+            if (PGD3024 > 0 && PAL3024 > 0)
             {
-                ratio = Math.Round(((PGD3048 / PAL3048) - 1) * 100, 2);
+                ratio = Math.Round(((PGD3024 / PAL3024) - 1) * 100, 2);
             }
             decimal PGD30V = Precio("GD30CI", "Venta");
             decimal PGD30DC = Precio("GD30DCI", "Compra");
@@ -199,34 +200,34 @@ namespace ActualizadorSheets
             decimal PAL30DC = Precio("AL30DCI", "Compra");
             decimal PGD30DV = Precio("GD30DCI", "Venta");
             decimal PGD30C = Precio("GD30CI", "Compra");
-            decimal PGD30V48 = Precio("GD3048", "Venta");
-            decimal PGD30C48 = Precio("GD3048", "Compra");
-            decimal PAL30V48 = Precio("AL3048", "Venta");
-            decimal PAL30C48 = Precio("AL3048", "Compra");
+            decimal PGD30V24 = Precio("GD3024", "Venta");
+            decimal PGD30C24 = Precio("GD3024", "Compra");
+            decimal PAL30V24 = Precio("AL3024", "Venta");
+            decimal PAL30C24 = Precio("AL3024", "Compra");
             decimal PLEDEV = Precio(LEDEPesos + "CI", "Venta");
             decimal PLEDEC = Precio(LEDEPesos + "CI", "Compra");
             decimal PLEDEDV = Precio(LEDEDolares + "CI", "Venta");
             decimal PLEDEDC = Precio(LEDEDolares + "CI", "Compra");
-            decimal PGD30D = Precio("GD30D48", "Precio");
-            decimal PAL30D = Precio("AL30D48", "Precio");
-            decimal PAL30D48V = Precio("AL30D48", "Venta");
-            decimal PAL30D48C = Precio("AL30D48", "Compra");
-            decimal PGD30DV48 = Precio("GD30D48", "Venta");
-            decimal PGD30DC48 = Precio("GD30D48", "Compra");
-            decimal PLEDEV48 = Precio(LEDEPesos + "48", "Venta");
-            decimal PLEDEC48 = Precio(LEDEPesos + "48", "Compra");
-            decimal PLEDEDV48 = Precio(LEDEDolares + "48", "Venta");
-            decimal PLEDEDC48 = Precio(LEDEDolares + "48", "Compra");
+            decimal PGD30D = Precio("GD30D24", "Precio");
+            decimal PAL30D = Precio("AL30D24", "Precio");
+            decimal PAL30D24V = Precio("AL30D24", "Venta");
+            decimal PAL30D24C = Precio("AL30D24", "Compra");
+            decimal PGD30DV24 = Precio("GD30D24", "Venta");
+            decimal PGD30DC24 = Precio("GD30D24", "Compra");
+            decimal PLEDEV24 = Precio(LEDEPesos + "24", "Venta");
+            decimal PLEDEC24 = Precio(LEDEPesos + "24", "Compra");
+            decimal PLEDEDV24 = Precio(LEDEDolares + "24", "Venta");
+            decimal PLEDEDC24 = Precio(LEDEDolares + "24", "Compra");
             decimal PCLSIOC = Precio("CLSIOCI", "Compra");
-            decimal PCLSIOV48 = Precio("CLSIO48", "Venta");
+            decimal PCLSIOV24 = Precio("CLSIO24", "Venta");
 
 
             decimal PuntasGDAL = 0;
             decimal PuntasALGD = 0;
-            if (PGD30C48 > 0 && PAL30V48 > 0 && PGD30V48 > 0 && PAL30C48 > 0)
+            if (PGD30C24 > 0 && PAL30V24 > 0 && PGD30V24 > 0 && PAL30C24 > 0)
             {
-                PuntasGDAL = Math.Round(((PGD30C48 / PAL30V48) - 1) * 100, 2);
-                PuntasALGD = Math.Round(((PGD30V48 / PAL30C48) - 1) * 100, 2);
+                PuntasGDAL = Math.Round(((PGD30C24 / PAL30V24) - 1) * 100, 2);
+                PuntasALGD = Math.Round(((PGD30V24 / PAL30C24) - 1) * 100, 2);
             }
 
             if (int.Parse(DateTime.Now.ToString("HHmm")) >= 1103 && int.Parse(DateTime.Now.ToString("HHmm")) < 1702)
@@ -234,11 +235,11 @@ namespace ActualizadorSheets
                 ValueRange valueRange = new ValueRange();
                 valueRange.MajorDimension = "COLUMNS";//"ROWS";//COLUMNS
 
-                var oblist = new List<object>() { PGD3048, PAL3048, ratio,
+                var oblist = new List<object>() { PGD3024, PAL3024, ratio,
                     PGD30V, PGD30DC, PAL30DV, PAL30C, PAL30V, PAL30DC, PGD30DV, PGD30C,
-                    PGD30V48, PGD30C48, PAL30V48, PAL30C48, PLEDEV, PLEDEC, PLEDEDV,
-                    PLEDEDC, PGD30D, PAL30D,PAL30D48V,PAL30D48C, PGD30DV48, PGD30DC48,
-                    PLEDEV48, PLEDEC48, PLEDEDV48, PLEDEDC48, PCLSIOC, PCLSIOV48};
+                    PGD30V24, PGD30C24, PAL30V24, PAL30C24, PLEDEV, PLEDEC, PLEDEDV,
+                    PLEDEDC, PGD30D, PAL30D,PAL30D24V,PAL30D24C, PGD30DV24, PGD30DC24,
+                    PLEDEV24, PLEDEC24, PLEDEDV24, PLEDEDC24, PCLSIOC, PCLSIOV24};
 
                 valueRange.Values = new List<IList<object>> { oblist };
 
@@ -255,7 +256,7 @@ namespace ActualizadorSheets
                 int siguiente = lectura.Values.Count + 1;
                 valueRange = new ValueRange();
                 valueRange.MajorDimension = "ROWS";
-                oblist = new List<object>() { ahora, PGD3048, PAL3048, ratio, PuntasGDAL, PuntasALGD };
+                oblist = new List<object>() { ahora, PGD3024, PAL3024, ratio, PuntasGDAL, PuntasALGD };
                 valueRange.Values = new List<IList<object>> { oblist };
                 update = service.Spreadsheets.Values.Update(valueRange, spreadsheetId2, "Intraday!O" + siguiente.ToString() + ":T" + siguiente.ToString());
                 update.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.RAW;
