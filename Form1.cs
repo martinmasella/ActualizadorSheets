@@ -156,7 +156,8 @@ namespace ActualizadorSheets
             nombres.Add("AL30D");
             nombres.Add(LEDEPesos);
             nombres.Add(LEDEDolares);
-            nombres.Add("CLSIO");
+            nombres.Add("BA37D");
+            nombres.Add("BA7DD");
 
             foreach (var nombre in nombres)
             {
@@ -218,8 +219,10 @@ namespace ActualizadorSheets
             decimal PLEDEC24 = Precio(LEDEPesos + "24", "Compra");
             decimal PLEDEDV24 = Precio(LEDEDolares + "24", "Venta");
             decimal PLEDEDC24 = Precio(LEDEDolares + "24", "Compra");
-            decimal PCLSIOC = Precio("CLSIOCI", "Compra");
-            decimal PCLSIOV24 = Precio("CLSIO24", "Venta");
+            decimal PBA37DC = Precio("BA37DCI", "Compra");
+            decimal PBA37DV = Precio("BA37DCI", "Venta");
+            decimal PBA7DDC = Precio("BA7DDCI", "Compra");
+            decimal PBA7DDV = Precio("BA7DDCI", "Venta");
 
 
             decimal PuntasGDAL = 0;
@@ -239,7 +242,7 @@ namespace ActualizadorSheets
                     PGD30V, PGD30DC, PAL30DV, PAL30C, PAL30V, PAL30DC, PGD30DV, PGD30C,
                     PGD30V24, PGD30C24, PAL30V24, PAL30C24, PLEDEV, PLEDEC, PLEDEDV,
                     PLEDEDC, PGD30D, PAL30D,PAL30D24V,PAL30D24C, PGD30DV24, PGD30DC24,
-                    PLEDEV24, PLEDEC24, PLEDEDV24, PLEDEDC24, PCLSIOC, PCLSIOV24};
+                    PLEDEV24, PLEDEC24, PLEDEDV24, PLEDEDC24, PBA37DC, PBA37DV, PBA7DDC, PBA7DDV};
 
                 valueRange.Values = new List<IList<object>> { oblist };
 
