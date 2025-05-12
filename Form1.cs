@@ -19,8 +19,9 @@ namespace ActualizadorSheets
         //const string sufijo48 = " - 48hs";
         const string sufijo24 = " - 24hs";
 
-        string LEDEPesos;
-        string LEDEDolares;
+        string LEDEP;
+        string LEDED;
+        string LEDEC;
 
         string token;
         List<string> nombres;
@@ -58,9 +59,10 @@ namespace ActualizadorSheets
                 .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
-            LEDEPesos = configuracion.GetSection("MiConfiguracion:LEDE Pesos").Value;
-            LEDEDolares = configuracion.GetSection("MiConfiguracion:LEDE Dolares").Value;
-            txtUsuario.Text = configuracion.GetSection("MiConfiguracion:UsuarioVETA").Value;
+            LEDEP = configuracion.GetSection("MiConfiguracion:LEDE Pesos").Value;
+            LEDED = configuracion.GetSection("MiConfiguracion:LEDE Dolares").Value;
+            LEDEC = configuracion.GetSection("MiConfiguracion:LEDE CCL").Value;
+			txtUsuario.Text = configuracion.GetSection("MiConfiguracion:UsuarioVETA").Value;
             txtClave.Text = configuracion.GetSection("MiConfiguracion:ClaveVETA").Value;
         }
 
@@ -154,10 +156,9 @@ namespace ActualizadorSheets
             nombres.Add("AL30");
             nombres.Add("GD30D");
             nombres.Add("AL30D");
-            nombres.Add(LEDEPesos);
-            nombres.Add(LEDEDolares);
-            nombres.Add("BA37D");
-            nombres.Add("BA7DD");
+            nombres.Add(LEDEP);
+            nombres.Add(LEDED);
+            nombres.Add(LEDEC);
 
             foreach (var nombre in nombres)
             {
@@ -205,25 +206,30 @@ namespace ActualizadorSheets
             decimal PGD30C24 = Precio("GD3024", "Compra");
             decimal PAL30V24 = Precio("AL3024", "Venta");
             decimal PAL30C24 = Precio("AL3024", "Compra");
-            decimal PLEDEV = Precio(LEDEPesos + "CI", "Venta");
-            decimal PLEDEC = Precio(LEDEPesos + "CI", "Compra");
-            decimal PLEDEDV = Precio(LEDEDolares + "CI", "Venta");
-            decimal PLEDEDC = Precio(LEDEDolares + "CI", "Compra");
+            decimal PLEDEV = Precio(LEDEP + "CI", "Venta");
+            decimal PLEDEC = Precio(LEDEP + "CI", "Compra");
+            decimal PLEDEDV = Precio(LEDED + "CI", "Venta");
+            decimal PLEDEDC = Precio(LEDED + "CI", "Compra");
+            decimal PLEDECV = Precio(LEDEC + "CI", "Venta");
+            decimal PLEDECC = Precio(LEDEC + "CI", "Compra");
             decimal PGD30D = Precio("GD30D24", "Precio");
             decimal PAL30D = Precio("AL30D24", "Precio");
             decimal PAL30D24V = Precio("AL30D24", "Venta");
             decimal PAL30D24C = Precio("AL30D24", "Compra");
             decimal PGD30DV24 = Precio("GD30D24", "Venta");
             decimal PGD30DC24 = Precio("GD30D24", "Compra");
-            decimal PLEDEV24 = Precio(LEDEPesos + "24", "Venta");
-            decimal PLEDEC24 = Precio(LEDEPesos + "24", "Compra");
-            decimal PLEDEDV24 = Precio(LEDEDolares + "24", "Venta");
-            decimal PLEDEDC24 = Precio(LEDEDolares + "24", "Compra");
-            decimal PBA37DC = Precio("BA37DCI", "Compra");
+            decimal PLEDEV24 = Precio(LEDEP + "24", "Venta");
+            decimal PLEDEC24 = Precio(LEDEP + "24", "Compra");
+            decimal PLEDEDV24 = Precio(LEDED + "24", "Venta");
+            decimal PLEDEDC24 = Precio(LEDED + "24", "Compra");
+			decimal PLEDECV24 = Precio(LEDEC + "24", "Venta");
+			decimal PLEDECC24 = Precio(LEDEC + "24", "Compra");
+            /*
+			decimal PBA37DC = Precio("BA37DCI", "Compra");
             decimal PBA37DV = Precio("BA37DCI", "Venta");
             decimal PBA7DDC = Precio("BA7DDCI", "Compra");
             decimal PBA7DDV = Precio("BA7DDCI", "Venta");
-
+            */
 
             decimal PuntasGDAL = 0;
             decimal PuntasALGD = 0;
@@ -233,7 +239,7 @@ namespace ActualizadorSheets
                 PuntasALGD = Math.Round(((PGD30V24 / PAL30C24) - 1) * 100, 2);
             }
 
-            if (int.Parse(DateTime.Now.ToString("HHmm")) >= 1103 && int.Parse(DateTime.Now.ToString("HHmm")) < 1702)
+            if (int.Parse(DateTime.Now.ToString("HHmm")) >= 1102 && int.Parse(DateTime.Now.ToString("HHmm")) < 1702)
             {
                 ValueRange valueRange = new ValueRange();
                 valueRange.MajorDimension = "COLUMNS";//"ROWS";//COLUMNS
@@ -242,7 +248,7 @@ namespace ActualizadorSheets
                     PGD30V, PGD30DC, PAL30DV, PAL30C, PAL30V, PAL30DC, PGD30DV, PGD30C,
                     PGD30V24, PGD30C24, PAL30V24, PAL30C24, PLEDEV, PLEDEC, PLEDEDV,
                     PLEDEDC, PGD30D, PAL30D,PAL30D24V,PAL30D24C, PGD30DV24, PGD30DC24,
-                    PLEDEV24, PLEDEC24, PLEDEDV24, PLEDEDC24, PBA37DC, PBA37DV, PBA7DDC, PBA7DDV};
+                    PLEDEV24, PLEDEC24, PLEDEDV24, PLEDEDC24, PLEDECV, PLEDECC, PLEDECC24, PLEDECV24};
 
                 valueRange.Values = new List<IList<object>> { oblist };
 
@@ -272,10 +278,8 @@ namespace ActualizadorSheets
                 {
                     ToLog(ex.Message);
                 }
-
             }
         }
-
 
         private decimal Precio(string nombreMedio, string cual)
         {
@@ -296,8 +300,6 @@ namespace ActualizadorSheets
                     throw new ArgumentException("El valor " + cual + " no es válido.");
             }
         }
-
-
     }
     public class Ticker
     {
