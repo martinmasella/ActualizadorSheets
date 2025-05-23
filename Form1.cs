@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Primary;
 using Primary.Data;
+using System.Collections;
 
 namespace ActualizadorSheets
 {
@@ -25,7 +26,7 @@ namespace ActualizadorSheets
 
         string token;
         List<string> nombres;
-        List<Ticker> tickers;
+        IList<Ticker> tickers;
 
         //Acá hardcodee el ID de mi Google Sheet.
         String spreadsheetId2 = "1W2kTK4n10-fKWYRJmoffOnxdaibkL-7I5wduSHVlGvI";
@@ -120,16 +121,21 @@ namespace ActualizadorSheets
             {
                 //En la versión Alpha era así. Gracias Juan Manuel Álvarez.
                 //var ticker = marketData.Instrument.Symbol;
+                Console.WriteLine(marketData.Data.ToString());
                 var ticker = marketData.InstrumentId.Symbol;
                 decimal bid = 0;
+                decimal bidsize= 0;
                 if (marketData.Data.Bids != null)
                 {
                     bid = marketData.Data.Bids.FirstOrDefault().Price;
+                    bidsize = marketData.Data.Bids.FirstOrDefault().Size;
                 }
                 decimal offer = 0;
+                decimal offersize = 0;
                 if (marketData.Data.Offers != null)
                 {
                     offer = marketData.Data.Offers.FirstOrDefault().Price;
+                    offersize=marketData.Data.Offers.FirstOrDefault().Size;
                 }
                 decimal last = 0;
                 if (marketData.Data.Last != null)
@@ -138,11 +144,14 @@ namespace ActualizadorSheets
                 }
 
                 var elemento = tickers.Where<Ticker>(t => t.NombreLargo == ticker).FirstOrDefault<Ticker>();
+                elemento.bidsize = bidsize;
                 elemento.bid = bid;
-                elemento.offer = offer;
                 elemento.last = last;
+                elemento.offer = offer;
+                elemento.offersize = offersize;
+                elemento.stamp= DateTimeOffset.FromUnixTimeMilliseconds(marketData.Timestamp).DateTime.AddHours(-3).ToShortTimeString();
 
-                ToLog(ticker);
+				ToLog(ticker);
             }
             catch (Exception ex)
             {
@@ -156,11 +165,21 @@ namespace ActualizadorSheets
             nombres.Add("AL30");
             nombres.Add("GD30D");
             nombres.Add("AL30D");
-            nombres.Add(LEDEP);
-            nombres.Add(LEDED);
-            nombres.Add(LEDEC);
+            nombres.AddRange(new[] { "AL29", "AL29D", "GD29", "GD29D", "AE38", "AE38D","GD38","GD38D"});
 
-            foreach (var nombre in nombres)
+			// Agregar elementos desde el tag "LEDEs" del appsettings.json
+			var configuracion = new ConfigurationBuilder()
+				.SetBasePath(AppContext.BaseDirectory)
+				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+				.Build();
+			var ledesString = configuracion.GetSection("MiConfiguracion:LEDEs").Value;
+			if (!string.IsNullOrWhiteSpace(ledesString))
+			{
+				var ledes = ledesString.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+				nombres.AddRange(ledes);
+			}
+
+			foreach (var nombre in nombres)
             {
                 tickers.Add(new Ticker(prefijoPrimary + nombre + sufijoCI, nombre + "CI", nombre));
                 tickers.Add(new Ticker(prefijoPrimary + nombre + sufijo24, nombre + "24", nombre));
@@ -278,8 +297,33 @@ namespace ActualizadorSheets
                 {
                     ToLog(ex.Message);
                 }
-            }
-        }
+
+                //MD
+                List<IList<object>> filas = new List<IList<object>>();
+                foreach (var ticker in tickers)
+                {
+                    var fila = new List<object>() {ticker.NombreMedio,ticker.bidsize,ticker.bid,ticker.last, ticker.offer, ticker.offersize, ticker.stamp };
+                    filas.Add(fila);
+                }
+
+                valueRange = new ValueRange();
+                valueRange.MajorDimension = "ROWS";
+                valueRange.Values = (IList<IList<object>>)filas;
+                string rango = "MD!B2";
+                update = service.Spreadsheets.Values.Update(valueRange, spreadsheetId2, rango);
+                update.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.RAW;
+				try
+				{
+					update.Execute();
+
+				}
+				catch (Exception ex)
+				{
+					ToLog(ex.Message);
+				}
+
+			}
+		}
 
         private decimal Precio(string nombreMedio, string cual)
         {
@@ -301,22 +345,28 @@ namespace ActualizadorSheets
             }
         }
     }
-    public class Ticker
+    public class Ticker 
     {
         public string NombreLargo { get; set; }
         public string NombreMedio { get; set; }
         public string NombreCorto { get; set; }
-        public decimal bid;
+		public decimal bidsize;
+		public decimal bid;
         public decimal last;
         public decimal offer;
-        public Ticker(string nombrelargo, string nombremedio, string nombrecorto)
+        public decimal offersize;
+        public string stamp;
+		public Ticker(string nombrelargo, string nombremedio, string nombrecorto)
         {
             NombreLargo = nombrelargo;
             NombreMedio = nombremedio;
             NombreCorto = nombrecorto;
+            bidsize = 0;
             bid = 0;
             last = 0;
             offer = 0;
+            offersize = 0;
         }
-    }
+
+	}
 }
