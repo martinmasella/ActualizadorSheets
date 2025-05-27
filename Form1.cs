@@ -161,13 +161,8 @@ namespace ActualizadorSheets
 
         private void FillListaTickers()
         {
-            nombres.Add("GD30");
-            nombres.Add("AL30");
-            nombres.Add("GD30D");
-            nombres.Add("AL30D");
-            nombres.Add("GD30C");
-            nombres.Add("AL30C");
-            nombres.AddRange(new[] { "AL29", "AL29D","AL29C", "GD29", "GD29D","GD29C", "AE38", "AE38D","AE38C","GD38","GD38D","GD38C"});
+            nombres.AddRange(new[] { "GD30", "AL30", "GD30D", "AL30D", "GD30C", "AL30C", "AL29", "AL29D", "AL29C", "GD29", "GD29D", "GD29C",
+                "AL35","GD35","AL35D","GD35D","AL35C","GD35C", "AE38", "AE38D", "AE38C", "GD38", "GD38D", "GD38C" });
 
 			// Agregar elementos desde el tag "LEDEs" del appsettings.json
 			var configuracion = new ConfigurationBuilder()
