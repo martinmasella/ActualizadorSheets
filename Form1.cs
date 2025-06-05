@@ -60,12 +60,21 @@ namespace ActualizadorSheets
                 .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
-            LEDEP = configuracion.GetSection("MiConfiguracion:LEDE Pesos").Value;
-            LEDED = configuracion.GetSection("MiConfiguracion:LEDE Dolares").Value;
-            LEDEC = configuracion.GetSection("MiConfiguracion:LEDE CCL").Value;
-			txtUsuario.Text = configuracion.GetSection("MiConfiguracion:UsuarioVETA").Value;
-            txtClave.Text = configuracion.GetSection("MiConfiguracion:ClaveVETA").Value;
-        }
+            try
+            {
+                LEDEP = configuracion.GetSection("MiConfiguracion:LEDE Pesos").Value;
+                LEDED = configuracion.GetSection("MiConfiguracion:LEDE Dolares").Value;
+                LEDEC = configuracion.GetSection("MiConfiguracion:LEDE CCL").Value;
+			    
+                
+                txtUsuario.Text = configuracion.GetSection("MiConfiguracion:UsuarioVETA").Value;
+                txtClave.Text = configuracion.GetSection("MiConfiguracion:ClaveVETA").Value;
+            }
+            catch (Exception ex)
+            {
+                ToLog("Error al leer la configuración: " + ex.Message);
+			}
+		}
 
         private void btnClear_Click(object sender, EventArgs e)
         {
@@ -163,6 +172,22 @@ namespace ActualizadorSheets
         {
             nombres.AddRange(new[] { "GD30", "AL30", "GD30D", "AL30D", "GD30C", "AL30C", "AL29", "AL29D", "AL29C", "GD29", "GD29D", "GD29C",
                 "AL35","GD35","AL35D","GD35D","AL35C","GD35C", "AE38", "AE38D", "AE38C", "GD38", "GD38D", "GD38C" });
+            nombres.AddRange(new[] {"KO","KOD","KOC" });
+            nombres.AddRange(new[] {"SPY","SPYD","SPYC" });
+            nombres.AddRange(new[] {"TSLA","TSLAD","TSLAC" });
+            nombres.AddRange(new[] {"GOOGL","GOGLD","GOGLC" });
+            nombres.AddRange(new[] {"NVDA","NVDAD","NVDAC" });
+            nombres.AddRange(new[] {"MELI","MELID","MELIC" });
+            nombres.AddRange(new[] {"EWZ","EWZD","EWZC" });
+            nombres.AddRange(new[] {"GLD","GLDD","GLDC" });
+            nombres.AddRange(new[] {"QQQ","QQQD","QQQC" });
+            nombres.AddRange(new[] {"MSFT","MSFTD","MSFTC" });
+            nombres.AddRange(new[] {"BABA","BABAD","BABAC" });
+            nombres.AddRange(new[] {"AMZN","AMZND","AMZNC" });
+            nombres.AddRange(new[] {"AAPL","AAPLD","AAPLC" });
+            nombres.AddRange(new[] {"VALE","VALED","VALEC" });
+            nombres.AddRange(new[] {"META","METAD","METAC" });
+
 
 			// Agregar elementos desde el tag "LEDEs" del appsettings.json
 			var configuracion = new ConfigurationBuilder()
