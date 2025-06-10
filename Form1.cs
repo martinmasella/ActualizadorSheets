@@ -172,6 +172,9 @@ namespace ActualizadorSheets
         {
             nombres.AddRange(new[] { "GD30", "AL30", "GD30D", "AL30D", "GD30C", "AL30C", "AL29", "AL29D", "AL29C", "GD29", "GD29D", "GD29C",
                 "AL35","GD35","AL35D","GD35D","AL35C","GD35C", "AE38", "AE38D", "AE38C", "GD38", "GD38D", "GD38C" });
+            nombres.AddRange(new[] {"AL41","AL41D","AL41C" });
+            nombres.AddRange(new[] {"GD41","GD41D","GD41C" });
+            nombres.AddRange(new[] {"GD46","GD46D","GD46C" });
             nombres.AddRange(new[] {"KO","KOD","KOC" });
             nombres.AddRange(new[] {"SPY","SPYD","SPYC" });
             nombres.AddRange(new[] {"TSLA","TSLAD","TSLAC" });
