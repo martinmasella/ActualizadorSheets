@@ -191,7 +191,6 @@ namespace ActualizadorSheets
             nombres.AddRange(new[] {"VALE","VALED","VALEC" });
             nombres.AddRange(new[] {"META","METAD","METAC" });
 
-
 			// Agregar elementos desde el tag "LEDEs" del appsettings.json
 			var configuracion = new ConfigurationBuilder()
 				.SetBasePath(AppContext.BaseDirectory)
@@ -219,7 +218,11 @@ namespace ActualizadorSheets
 
         private void ToLog(string s)
         {
-            string texto = $"{DateTime.Now.ToLongTimeString()}: {s}";
+            if (lstLog.Items.Count > 100)
+            {
+                lstLog.Items.Clear();
+			}
+			string texto = $"{DateTime.Now.ToLongTimeString()}: {s}";
             lstLog.Items.Add(texto);
             lstLog.SelectedIndex = lstLog.Items.Count - 1;
         }
