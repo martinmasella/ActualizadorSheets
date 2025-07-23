@@ -13,6 +13,11 @@ namespace ActualizadorSheets
 {
     public partial class Form1 : Form
     {
+        private const int MAX_LOG_ITEMS = 100;
+        private const int REFRESH_INTERVAL = 10000;
+        private const string SHEET_DATO = "Dato!B1";
+        private const string SHEET_INTRADAY = "Intraday!O2:T2550";
+        private const string SHEET_MD = "MD!B2:H1000";
 
         const string sURL = "https://api.veta.xoms.com.ar";
         const string prefijoPrimary = "MERV - XMEV - ";
@@ -78,20 +83,21 @@ namespace ActualizadorSheets
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            // The A1 notation of the values to clear.
-            string range = "Intraday!O2:T2550";  // TODO: Update placeholder value.
-
-            // TODO: Assign values to desired properties of `requestBody`:
+            // Limpiar Intraday
+            string rangeIntraday = "Intraday!O2:T2550";
             ClearValuesRequest requestBody = new ClearValuesRequest();
-            SpreadsheetsResource.ValuesResource.ClearRequest request = service.Spreadsheets.Values.Clear(requestBody, spreadsheetId2, range);
+            var requestIntraday = service.Spreadsheets.Values.Clear(requestBody, spreadsheetId2, rangeIntraday);
+            ClearValuesResponse responseIntraday = requestIntraday.Execute();
 
-            // To execute asynchronously in an async method, replace `request.Execute()` as shown:
-            ClearValuesResponse response = request.Execute();
-            // Data.ClearValuesResponse response = await request.ExecuteAsync();
+            // Limpiar MD
+            string rangeMD = "MD!B2:H1000";
+            var requestMD = service.Spreadsheets.Values.Clear(requestBody, spreadsheetId2, rangeMD);
+            ClearValuesResponse responseMD = requestMD.Execute();
 
-            // TODO: Change code below to process the `response` object:
-            Console.WriteLine(JsonConvert.SerializeObject(response));
-            ToLog("Cleared");
+            // Log y salida
+            Console.WriteLine(JsonConvert.SerializeObject(responseIntraday));
+            Console.WriteLine(JsonConvert.SerializeObject(responseMD));
+            ToLog("Cleared Intraday and MD");
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -153,12 +159,12 @@ namespace ActualizadorSheets
                 }
 
                 var elemento = tickers.Where<Ticker>(t => t.NombreLargo == ticker).FirstOrDefault<Ticker>();
-                elemento.bidsize = bidsize;
-                elemento.bid = bid;
-                elemento.last = last;
-                elemento.offer = offer;
-                elemento.offersize = offersize;
-                elemento.stamp= DateTimeOffset.FromUnixTimeMilliseconds(marketData.Timestamp).DateTime.AddHours(-3).ToShortTimeString();
+                elemento.BidSize = bidsize;
+                elemento.Bid = bid;
+                elemento.Last = last;
+                elemento.Offer = offer;
+                elemento.OfferSize = offersize;
+                elemento.Stamp = DateTimeOffset.FromUnixTimeMilliseconds(marketData.Timestamp).DateTime.AddHours(-3).ToShortTimeString();
 
 				ToLog(ticker);
             }
@@ -170,26 +176,40 @@ namespace ActualizadorSheets
 
         private void FillListaTickers()
         {
-            nombres.AddRange(new[] { "GD30", "AL30", "GD30D", "AL30D", "GD30C", "AL30C", "AL29", "AL29D", "AL29C", "GD29", "GD29D", "GD29C",
-                "AL35","GD35","AL35D","GD35D","AL35C","GD35C", "AE38", "AE38D", "AE38C", "GD38", "GD38D", "GD38C" });
-            nombres.AddRange(new[] {"AL41","AL41D","AL41C" });
-            nombres.AddRange(new[] {"GD41","GD41D","GD41C" });
-            nombres.AddRange(new[] {"GD46","GD46D","GD46C" });
-            nombres.AddRange(new[] {"KO","KOD","KOC" });
-            nombres.AddRange(new[] {"SPY","SPYD","SPYC" });
-            nombres.AddRange(new[] {"TSLA","TSLAD","TSLAC" });
-            nombres.AddRange(new[] {"GOOGL","GOGLD","GOGLC" });
-            nombres.AddRange(new[] {"NVDA","NVDAD","NVDAC" });
-            nombres.AddRange(new[] {"MELI","MELID","MELIC" });
-            nombres.AddRange(new[] {"EWZ","EWZD","EWZC" });
-            nombres.AddRange(new[] {"GLD","GLDD","GLDC" });
-            nombres.AddRange(new[] {"QQQ","QQQD","QQQC" });
-            nombres.AddRange(new[] {"MSFT","MSFTD","MSFTC" });
-            nombres.AddRange(new[] {"BABA","BABAD","BABAC" });
-            nombres.AddRange(new[] {"AMZN","AMZND","AMZNC" });
-            nombres.AddRange(new[] {"AAPL","AAPLD","AAPLC" });
-            nombres.AddRange(new[] {"VALE","VALED","VALEC" });
-            nombres.AddRange(new[] {"META","METAD","METAC" });
+            nombres.AddRange(new[] { "AL30", "AL30D", "AL30C" });
+            nombres.AddRange(new[] { "GD30", "GD30D", "GD30C" });
+            nombres.AddRange(new[] { "AL29", "AL29D", "AL29C" });
+            nombres.AddRange(new[] { "GD29", "GD29D", "GD29C" });
+            nombres.AddRange(new[] { "AL35", "AL35D", "AL35C" });
+            nombres.AddRange(new[] { "GD35", "GD35D", "GD35C" });
+            nombres.AddRange(new[] { "AE38", "AE38D", "AE38C" });
+            nombres.AddRange(new[] { "GD38", "GD38D", "GD38C" });
+            nombres.AddRange(new[] { "AL41", "AL41D", "AL41C" });
+            nombres.AddRange(new[] { "GD41", "GD41D", "GD41C" });
+            nombres.AddRange(new[] { "GD46", "GD46D", "GD46C" });
+            nombres.AddRange(new[] { "DICP", "DICPD", "DICPC" });
+            nombres.AddRange(new[] { "TZX27" });
+            nombres.AddRange(new[] { "BA37D" });
+            nombres.AddRange(new[] { "BB37D" });
+            nombres.AddRange(new[] { "TX26", "TX26D", "TX26C" });
+            nombres.AddRange(new[] { "TX28", "TX28D", "TX28C" });
+            nombres.AddRange(new[] { "KO", "KOD", "KOC" });
+            nombres.AddRange(new[] { "SPY", "SPYD", "SPYC" });
+            nombres.AddRange(new[] { "TSLA", "TSLAD", "TSLAC" });
+            nombres.AddRange(new[] { "GOOGL", "GOGLD", "GOGLC" });
+            nombres.AddRange(new[] { "NVDA", "NVDAD", "NVDAC" });
+            nombres.AddRange(new[] { "MELI", "MELID", "MELIC" });
+            nombres.AddRange(new[] { "EWZ", "EWZD", "EWZC" });
+            nombres.AddRange(new[] { "GLD", "GLDD", "GLDC" });
+            nombres.AddRange(new[] { "QQQ", "QQQD", "QQQC" });
+            nombres.AddRange(new[] { "MSFT", "MSFTD", "MSFTC" });
+            nombres.AddRange(new[] { "BABA", "BABAD", "BABAC" });
+            nombres.AddRange(new[] { "AMZN", "AMZND", "AMZNC" });
+            nombres.AddRange(new[] { "AAPL", "AAPLD", "AAPLC" });
+            nombres.AddRange(new[] { "VALE", "VALED", "VALEC" });
+            nombres.AddRange(new[] { "META", "METAD", "METAC" });
+            nombres.AddRange(new[] { "PBR" });
+            nombres.AddRange(new[] { "GGAL", "GGALD", "GGALC" });
 
 			// Agregar elementos desde el tag "LEDEs" del appsettings.json
 			var configuracion = new ConfigurationBuilder()
@@ -218,7 +238,7 @@ namespace ActualizadorSheets
 
         private void ToLog(string s)
         {
-            if (lstLog.Items.Count > 100)
+            if (lstLog.Items.Count > MAX_LOG_ITEMS)
             {
                 lstLog.Items.Clear();
 			}
@@ -292,7 +312,7 @@ namespace ActualizadorSheets
                 PuntasALGD = Math.Round(((PGD30V24 / PAL30C24) - 1) * 100, 2);
             }
 
-            if (int.Parse(DateTime.Now.ToString("HHmm")) >= 1102 && int.Parse(DateTime.Now.ToString("HHmm")) < 1702)
+            if (int.Parse(DateTime.Now.ToString("HHmm")) >= 1032 && int.Parse(DateTime.Now.ToString("HHmm")) < 1702)
             {
                 ValueRange valueRange = new ValueRange();
                 valueRange.MajorDimension = "COLUMNS";//"ROWS";//COLUMNS
@@ -336,7 +356,7 @@ namespace ActualizadorSheets
                 List<IList<object>> filas = new List<IList<object>>();
                 foreach (var ticker in tickers)
                 {
-                    var fila = new List<object>() {ticker.NombreMedio,ticker.bidsize,ticker.bid,ticker.last, ticker.offer, ticker.offersize, ticker.stamp };
+                    var fila = new List<object>() {ticker.NombreMedio,ticker.BidSize,ticker.Bid,ticker.Last, ticker.Offer, ticker.OfferSize, ticker.Stamp };
                     filas.Add(fila);
                 }
 
@@ -355,7 +375,6 @@ namespace ActualizadorSheets
 				{
 					ToLog(ex.Message);
 				}
-
 			}
 		}
 
@@ -369,11 +388,11 @@ namespace ActualizadorSheets
             switch (cual)
             {
                 case "Precio":
-                    return ticker.last;
+                    return ticker.Last;
                 case "Venta":
-                    return ticker.offer;
+                    return ticker.Offer;
                 case "Compra":
-                    return ticker.bid;
+                    return ticker.Bid;
                 default:
                     throw new ArgumentException("El valor " + cual + " no es válido.");
             }
@@ -384,23 +403,19 @@ namespace ActualizadorSheets
         public string NombreLargo { get; set; }
         public string NombreMedio { get; set; }
         public string NombreCorto { get; set; }
-		public decimal bidsize;
-		public decimal bid;
-        public decimal last;
-        public decimal offer;
-        public decimal offersize;
-        public string stamp;
-		public Ticker(string nombrelargo, string nombremedio, string nombrecorto)
+        public decimal BidSize { get; set; }
+        public decimal Bid { get; set; }
+        public decimal Last { get; set; }
+        public decimal Offer { get; set; }
+        public decimal OfferSize { get; set; }
+        public string Stamp { get; set; }
+
+        public Ticker(string nombrelargo, string nombremedio, string nombrecorto)
         {
             NombreLargo = nombrelargo;
             NombreMedio = nombremedio;
             NombreCorto = nombrecorto;
-            bidsize = 0;
-            bid = 0;
-            last = 0;
-            offer = 0;
-            offersize = 0;
+            BidSize = Bid = Last = Offer = OfferSize = 0;
         }
-
 	}
 }
