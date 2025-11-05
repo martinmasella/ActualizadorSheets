@@ -97,7 +97,7 @@ namespace ActualizadorSheets
             // Log y salida
             Console.WriteLine(JsonConvert.SerializeObject(responseIntraday));
             Console.WriteLine(JsonConvert.SerializeObject(responseMD));
-            ToLog("Cleared Intraday and MD");
+            ToLog("Cleared!");
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -188,7 +188,9 @@ namespace ActualizadorSheets
             nombres.AddRange(new[] { "GD41", "GD41D", "GD41C" });
             nombres.AddRange(new[] { "GD46", "GD46D", "GD46C" });
             nombres.AddRange(new[] { "DICP", "DICPD", "DICPC" });
+            nombres.AddRange(new[] { "TZX26" });
             nombres.AddRange(new[] { "TZX27" });
+            nombres.AddRange(new[] { "TZX28" });
             nombres.AddRange(new[] { "BA37D" });
             nombres.AddRange(new[] { "BB37D" });
             nombres.AddRange(new[] { "TX26", "TX26D", "TX26C" });
@@ -208,8 +210,8 @@ namespace ActualizadorSheets
             nombres.AddRange(new[] { "AAPL", "AAPLD", "AAPLC" });
             nombres.AddRange(new[] { "VALE", "VALED", "VALEC" });
             nombres.AddRange(new[] { "META", "METAD", "METAC" });
-            nombres.AddRange(new[] { "PBR" });
             nombres.AddRange(new[] { "GGAL", "GGALD", "GGALC" });
+            nombres.AddRange(new[] { "PBR" });
 
 			// Agregar elementos desde el tag "LEDEs" del appsettings.json
 			var configuracion = new ConfigurationBuilder()
