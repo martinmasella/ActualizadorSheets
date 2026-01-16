@@ -89,15 +89,22 @@ namespace ActualizadorSheets
             var requestIntraday = service.Spreadsheets.Values.Clear(requestBody, spreadsheetId2, rangeIntraday);
             ClearValuesResponse responseIntraday = requestIntraday.Execute();
 
-            // Limpiar MD
-            string rangeMD = "MD!B2:H1000";
+			// Limpiar D-C
+			string rangeDaC= "D-C!O2:T2550";
+			requestBody = new ClearValuesRequest();
+			var requestDaC = service.Spreadsheets.Values.Clear(requestBody, spreadsheetId2, rangeDaC);
+			ClearValuesResponse responseDaC = requestDaC.Execute();
+
+
+			// Limpiar MD
+			string rangeMD = "MD!B2:H1000";
             var requestMD = service.Spreadsheets.Values.Clear(requestBody, spreadsheetId2, rangeMD);
             ClearValuesResponse responseMD = requestMD.Execute();
 
             // Log y salida
             Console.WriteLine(JsonConvert.SerializeObject(responseIntraday));
             Console.WriteLine(JsonConvert.SerializeObject(responseMD));
-            ToLog("Cleared!");
+            ToLog("Planilla limpiada!");
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -354,8 +361,53 @@ namespace ActualizadorSheets
                     ToLog(ex.Message);
                 }
 
-                //MD
-                List<IList<object>> filas = new List<IList<object>>();
+				//D-C
+
+				lectura = service.Spreadsheets.Values.Get(spreadsheetId2, "D-C!A1:A2550").Execute();
+
+				siguiente = lectura.Values.Count + 1;
+				valueRange = new ValueRange();
+				valueRange.MajorDimension = "ROWS";
+                decimal precioAL30D = Precio("AL30DCI", "Precio");
+                decimal precioAL30C = Precio("AL30CCI", "Precio");
+                ratio = 0;
+				if (precioAL30D > 0 && precioAL30C > 0)
+				{
+                    ratio = Math.Round(((precioAL30D / precioAL30C) - 1) * 100, 2);
+				}
+
+                decimal puntaDventa = Precio("AL30DCI", "Venta");
+                decimal puntaCcompra = Precio("AL30CCI", "Compra");
+                decimal puntaCventa = Precio("AL30CCI", "Venta");
+                decimal puntaDcompra = Precio("AL30DCI", "Compra");
+                decimal PuntasDaC = 0;
+				decimal PuntasCaD = 0;
+
+                if (puntaDventa > 0 && puntaCcompra > 0 && puntaCventa > 0 && puntaDcompra > 0)
+				{
+					PuntasDaC = Math.Round(((puntaDventa / puntaCcompra) - 1) * 100, 2);
+					PuntasCaD = Math.Round(((puntaDcompra / puntaCventa) - 1) * 100, 2);
+				}
+
+
+				oblist = new List<object>() { ahora, precioAL30D, precioAL30C, ratio, PuntasDaC, PuntasCaD };
+				valueRange.Values = new List<IList<object>> { oblist };
+				update = service.Spreadsheets.Values.Update(valueRange, spreadsheetId2, "D-C!O" + siguiente.ToString() + ":T" + siguiente.ToString());
+				update.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.RAW;
+				try
+				{
+					update.Execute();
+
+				}
+				catch (Exception ex)
+				{
+					ToLog(ex.Message);
+				}
+
+
+
+				//MD
+				List<IList<object>> filas = new List<IList<object>>();
                 foreach (var ticker in tickers)
                 {
                     var fila = new List<object>() {ticker.NombreMedio,ticker.BidSize,ticker.Bid,ticker.Last, ticker.Offer, ticker.OfferSize, ticker.Stamp };
