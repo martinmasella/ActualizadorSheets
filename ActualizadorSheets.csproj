@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="client_secret_202947654746-fmqgbul2aegj1gqe66cjh5tb633oadcn.apps.googleusercontent.com.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Google.Apis.Sheets.v4" Version="1.62.0.3148" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0-preview.4.23259.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />

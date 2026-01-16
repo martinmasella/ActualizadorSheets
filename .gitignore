@@ -11,6 +11,10 @@
 *.sln.docstates
 appsettings.json
 
+# Google OAuth tokens and credentials
+token.json/
+client_secret*.json
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
