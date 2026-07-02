@@ -195,13 +195,8 @@ namespace ActualizadorSheets
             nombres.AddRange(new[] { "GD41", "GD41D", "GD41C" });
             nombres.AddRange(new[] { "GD46", "GD46D", "GD46C" });
             nombres.AddRange(new[] { "DICP", "DICPD", "DICPC" });
-            nombres.AddRange(new[] { "TZX26" });
-            nombres.AddRange(new[] { "TZX27" });
-            nombres.AddRange(new[] { "TZX28" });
             nombres.AddRange(new[] { "BA37D" });
             nombres.AddRange(new[] { "BB37D" });
-            nombres.AddRange(new[] { "TX26", "TX26D", "TX26C" });
-            nombres.AddRange(new[] { "TX28", "TX28D", "TX28C" });
             nombres.AddRange(new[] { "KO", "KOD", "KOC" });
             nombres.AddRange(new[] { "SPY", "SPYD", "SPYC" });
             nombres.AddRange(new[] { "TSLA", "TSLAD", "TSLAC" });
@@ -219,6 +214,22 @@ namespace ActualizadorSheets
             nombres.AddRange(new[] { "META", "METAD", "METAC" });
             nombres.AddRange(new[] { "GGAL", "GGALD", "GGALC" });
             nombres.AddRange(new[] { "PBR" });
+            nombres.AddRange(new[] { "TZXO6" });
+            nombres.AddRange(new[] { "TX26", "TX26D", "TX26C" });
+            nombres.AddRange(new[] { "TZXD6" });
+            nombres.AddRange(new[] { "TZXM7" });
+            nombres.AddRange(new[] { "TZXA7" });
+            nombres.AddRange(new[] { "TZX27" });
+            nombres.AddRange(new[] { "TZXS7" });
+            nombres.AddRange(new[] { "TZXO7" });
+            nombres.AddRange(new[] { "TZXD7" });
+            nombres.AddRange(new[] { "TZXM8" });
+            nombres.AddRange(new[] { "TZX28" });
+            nombres.AddRange(new[] { "TZXS8" });
+            nombres.AddRange(new[] { "TX28", "TX28D", "TX28C" });
+            nombres.AddRange(new[] { "TZXD8" });
+            nombres.AddRange(new[] { "AO27", "AO27D", "AO27C" });
+            nombres.AddRange(new[] { "AO28", "AO28D", "AO28C" });
 
 			// Agregar elementos desde el tag "LEDEs" del appsettings.json
 			var configuracion = new ConfigurationBuilder()
